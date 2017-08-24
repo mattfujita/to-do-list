@@ -25,7 +25,8 @@ import com.libertymutual.goforcode.todolist.models.ToDoItem;
 public class ToDoItemRepository {
 
     private int nextId = 1;
-    List<ToDoItem> toDo = new ArrayList<ToDoItem>();
+    List<ToDoItem> toDo;
+    String [] items = new String[3];
 
     /**
      * Get all the items from the file. 
@@ -35,10 +36,31 @@ public class ToDoItemRepository {
     public List<ToDoItem> getAll() {
     	
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
+    	toDo = new ArrayList<ToDoItem>();
     	
 		try(FileReader reader = new FileReader("file.csv"); 
 			BufferedReader buffer = new BufferedReader(reader);
 	    	CSVParser parser = new CSVParser(buffer, csvFileFormat)) {
+			
+			Iterable<CSVRecord> records = csvFileFormat.parse(buffer);
+			
+			ToDoItem toDoItem;
+			
+			for (CSVRecord record : records) {
+				
+				toDoItem = new ToDoItem();
+				
+			    String columnOne = record.get(0);
+			    int id = Integer.parseInt(columnOne);
+			    toDoItem.setId(id);
+			    String columnTwo = record.get(1);
+			    toDoItem.setText(columnTwo);
+			    String columnThree = record.get(2);
+			    Boolean boo = Boolean.parseBoolean(columnThree);
+			    toDoItem.setComplete(boo);
+			    toDo.add(toDoItem);
+			   
+			}
 			
 		} catch (FileNotFoundException e) {
 			
@@ -61,14 +83,18 @@ public class ToDoItemRepository {
 
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
     	
-    	try (FileWriter writer = new FileWriter("file.csv"); 
+    	try (FileWriter writer = new FileWriter("file.csv", true); 
     		BufferedWriter buffer = new BufferedWriter(writer);
     		CSVPrinter printer = new CSVPrinter(buffer, csvFileFormat)) {
 
     		item.setId(nextId);
-    		toDo.add(item);
+    		String id = Integer.toString(item.getId());
+    		String boo = Boolean.toString(item.isComplete());
+    		items[0] = id;
+    		items[1] = item.getText();
+    		items[2] = boo;
+    		printer.printRecord(items);
     		nextId += 1;
-    		printer.printRecord(toDo);
     		
     	}  catch (IOException e) {
     		
@@ -85,13 +111,15 @@ public class ToDoItemRepository {
     	
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
     	
-    	ToDoItem toDoItem = null;
-    	
     	try (FileReader reader = new FileReader("file.csv");
     		BufferedReader buffer = new BufferedReader(reader);
     		CSVParser parser = new CSVParser(buffer, csvFileFormat)) { 
     		
-    		toDoItem = toDo.get(id - 1);
+    		for(ToDoItem item : toDo) {
+    			if(item.getId() == id) {
+    				return item;
+    			}
+    		}
     		
     	} catch (FileNotFoundException e) {
 			
@@ -103,7 +131,7 @@ public class ToDoItemRepository {
 
 		}
         
-		return toDoItem;
+		return null;
     }
 
     /**
@@ -112,9 +140,7 @@ public class ToDoItemRepository {
      */
     public void update(ToDoItem item) {
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
-    	
-    	ToDoItem toDoItem = item;
-    	
+	
     	try (FileReader reader = new FileReader("file.csv");
     		BufferedReader buffer = new BufferedReader(reader);
     		CSVParser parser = new CSVParser(buffer, csvFileFormat); 
@@ -122,7 +148,21 @@ public class ToDoItemRepository {
     		BufferedWriter bufferW = new BufferedWriter(writer);
     		CSVPrinter printer = new CSVPrinter(bufferW, csvFileFormat)) { 
     		
-    		toDoItem.setComplete(true);
+    		List<String[]> str = new ArrayList<String[]>(); 
+    		
+    		for (ToDoItem items : toDo) {
+ 
+    			String[] string = new String[3];
+        		String id = Integer.toString(item.getId());
+        		String boo = Boolean.toString(item.isComplete());
+        		string[0] = id;
+        		string[1] = item.getText();
+        		string[2] = boo;
+        		str.add(string);
+        		
+    		}
+    	
+    		printer.printRecords(str);
     		
     	} catch (FileNotFoundException e) {
 			

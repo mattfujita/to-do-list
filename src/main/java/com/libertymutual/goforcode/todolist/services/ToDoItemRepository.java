@@ -66,8 +66,8 @@ public class ToDoItemRepository {
     		CSVPrinter printer = new CSVPrinter(buffer, csvFileFormat)) {
 
     		item.setId(nextId);
-    		nextId += 1;
     		toDo.add(item);
+    		nextId += 1;
     		printer.printRecord(toDo);
     		
     	}  catch (IOException e) {

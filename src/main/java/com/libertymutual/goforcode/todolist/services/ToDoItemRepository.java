@@ -37,7 +37,8 @@ public class ToDoItemRepository {
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
     	
 		try(FileReader reader = new FileReader("file.csv"); 
-	    	CSVParser parser = new CSVParser(reader, csvFileFormat)) {
+			BufferedReader buffer = new BufferedReader(reader);
+	    	CSVParser parser = new CSVParser(buffer, csvFileFormat)) {
 			
 		} catch (FileNotFoundException e) {
 			
@@ -61,7 +62,8 @@ public class ToDoItemRepository {
     	CSVFormat csvFileFormat = CSVFormat.DEFAULT;
     	
     	try (FileWriter writer = new FileWriter("file.csv"); 
-    		CSVPrinter printer = new CSVPrinter(writer, csvFileFormat)) {
+    		BufferedWriter buffer = new BufferedWriter(writer);
+    		CSVPrinter printer = new CSVPrinter(buffer, csvFileFormat)) {
 
     		item.setId(nextId);
     		nextId += 1;
@@ -86,7 +88,8 @@ public class ToDoItemRepository {
     	ToDoItem toDoItem = null;
     	
     	try (FileReader reader = new FileReader("file.csv");
-    		CSVParser parser = new CSVParser(reader, csvFileFormat)) { 
+    		BufferedReader buffer = new BufferedReader(reader);
+    		CSVParser parser = new CSVParser(buffer, csvFileFormat)) { 
     		
     		toDoItem = toDo.get(id - 1);
     		
@@ -113,9 +116,11 @@ public class ToDoItemRepository {
     	ToDoItem toDoItem = item;
     	
     	try (FileReader reader = new FileReader("file.csv");
-    		CSVParser parser = new CSVParser(reader, csvFileFormat); 
+    		BufferedReader buffer = new BufferedReader(reader);
+    		CSVParser parser = new CSVParser(buffer, csvFileFormat); 
     		FileWriter writer = new FileWriter("file.csv"); 
-    		CSVPrinter printer = new CSVPrinter(writer, csvFileFormat)) { 
+    		BufferedWriter bufferW = new BufferedWriter(writer);
+    		CSVPrinter printer = new CSVPrinter(bufferW, csvFileFormat)) { 
     		
     		toDoItem.setComplete(true);
     		

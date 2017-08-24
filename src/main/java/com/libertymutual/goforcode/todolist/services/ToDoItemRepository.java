@@ -150,13 +150,15 @@ public class ToDoItemRepository {
     		
     		List<String[]> str = new ArrayList<String[]>(); 
     		
+    		item.setComplete(true);
+    		
     		for (ToDoItem items : toDo) {
  
     			String[] string = new String[3];
-        		String id = Integer.toString(item.getId());
-        		String boo = Boolean.toString(item.isComplete());
+        		String id = Integer.toString(items.getId());
+        		String boo = Boolean.toString(items.isComplete());
         		string[0] = id;
-        		string[1] = item.getText();
+        		string[1] = items.getText();
         		string[2] = boo;
         		str.add(string);
         		

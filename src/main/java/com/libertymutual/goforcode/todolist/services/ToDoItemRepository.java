@@ -44,6 +44,8 @@ public class ToDoItemRepository {
 			
 			Iterable<CSVRecord> records = csvFileFormat.parse(buffer);
 			
+			nextId = 1;
+			
 			ToDoItem toDoItem;
 			
 			for (CSVRecord record : records) {
@@ -59,6 +61,7 @@ public class ToDoItemRepository {
 			    Boolean boo = Boolean.parseBoolean(columnThree);
 			    toDoItem.setComplete(boo);
 			    toDo.add(toDoItem);
+			    nextId += 1;
 			   
 			}
 			
